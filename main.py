@@ -5,16 +5,16 @@ from ollama import Client
 
 
 def create_driver():
-    print("🌐 Запускаю браузер...")
+    print("Запускаю браузер...")
     options = uc.ChromeOptions()
     options.add_argument("--start-maximized")
     driver = uc.Chrome(options=options)
-    print("✅ Браузер готов")
+    print("Браузер готов")
     return driver
 
 
 def main():
-    print("🤖 АВТОНОМНЫЙ БРАУЗЕРНЫЙ АГЕНТ")
+    print("АВТОНОМНЫЙ БРАУЗЕРНЫЙ АГЕНТ")
     print("=" * 40)
 
     driver = create_driver()
@@ -32,18 +32,18 @@ def main():
         if not task:
             continue
 
-        print(f"\n🚀 Выполняю: {task}")
+        print(f"\nВыполняю: {task}")
 
         try:
             result = agent.execute_task(task)
             print("\n" + "=" * 40)
-            print("📊 РЕЗУЛЬТАТ:")
+            print("РЕЗУЛЬТАТ:")
             print(result)
         except Exception as e:
-            print(f"❌ Ошибка: {e}")
+            print(f"Ошибка: {e}")
 
     driver.quit()
-    print("\n👋 Завершено")
+    print("\nЗавершено")
 
 
 if __name__ == "__main__":

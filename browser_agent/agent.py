@@ -20,8 +20,8 @@ class AutonomousBrowserAgent:
 
     def _default_input_callback(self, question: str) -> str:
         """Стандартная функция для запроса ввода у пользователя."""
-        print(f"\n🤖 Агент спрашивает: {question}")
-        return input("👤 Ваш ответ: ").strip()
+        print(f"\nАгент спрашивает: {question}")
+        return input("Ваш ответ: ").strip()
 
     def execute_task(self, user_goal: str) -> str:
         """Автономное выполнение задачи."""
@@ -31,11 +31,11 @@ class AutonomousBrowserAgent:
         self.context['pending_question'] = None
         max_steps = 30
 
-        print(f"\n🎯 Цель: {user_goal}")
-        print("🚀 Начинаю выполнение...")
+        print(f"\nЦель: {user_goal}")
+        print("Начинаю выполнение...")
 
         for step in range(max_steps):
-            print(f"\n🔁 Шаг {step + 1}/{max_steps}")
+            print(f"\nШаг {step + 1}/{max_steps}")
 
             # Обработка ожидаемого ответа от пользователя
             if self.context['pending_question']:
@@ -47,7 +47,7 @@ class AutonomousBrowserAgent:
                     self.context['pending_question'] = None
                     continue
                 elif answer:
-                    print(f"   ✅ Получен ответ: {answer}")
+                    print(f"   Получен ответ: {answer}")
                     # Сохраняем ответ
                     info_key = self.context['pending_question'].get('info_key', 'user_input')
                     self.context['additional_info'][info_key] = answer
@@ -71,20 +71,21 @@ class AutonomousBrowserAgent:
             if action.get('needs_info'):
                 self.context['pending_question'] = {
                     'question': action.get('question', ''),
-                    'info_key': action.get('info_key', 'additional_info')
+                    'info_key': action.get('info_key',
+                                           'additional_info')
                 }
-                print(f"\n❓ Требуется уточнение: {action.get('question', '')}")
+                print(f"\nТребуется уточнение: {action.get('question', '')}")
                 continue
 
-            print(f"   📝 Действие: {action.get('action', '?')}({action.get('target', '?')})")
+            print(f"   Действие: {action.get('action', '?')}({action.get('target', '?')})")
             if action.get('reasoning'):
-                print(f"   💭 Рассуждение: {action['reasoning'][:100]}...")
+                print(f"   Рассуждение: {action['reasoning'][:100]}...")
             if action.get('value'):
-                print(f"   📋 Значение: '{action['value'][:50]}...'")
+                print(f"   Значение: '{action['value'][:50]}...'")
 
             # Выполняем действие
             result = self.execute_action(action, page_info)
-            print(f"   📊 Результат: {result[:100]}...")
+            print(f"   Результат: {result[:100]}...")
 
             # Сохраняем в историю
             self.context['history'].append({
@@ -95,7 +96,7 @@ class AutonomousBrowserAgent:
 
             # Проверяем завершение
             if self._should_stop(action, result, step, max_steps, page_info):
-                print(f"\n✅ Завершаю выполнение на шаге {step + 1}")
+                print(f"\nЗавершаю выполнение на шаге {step + 1}")
                 break
 
             time.sleep(1)
@@ -115,11 +116,11 @@ class AutonomousBrowserAgent:
 
         try:
             print(f"\n{'=' * 60}")
-            print(f"🤖 АГЕНТ СПРАШИВАЕТ:")
+            print(f"АГЕНТ СПРАШИВАЕТ:")
             print(f"   {question}")
             print(f"{'=' * 60}")
 
-            answer = input("\n👤 Ваш ответ: ").strip()
+            answer = input("\nВаш ответ: ").strip()
 
             if answer.lower() in ['отмена', 'cancel', 'стоп']:
                 raise KeyboardInterrupt("Пользователь отменил задачу")
@@ -128,7 +129,7 @@ class AutonomousBrowserAgent:
 
             return answer if answer else None
         except Exception as e:
-            print(f"   ⚠️ Ошибка: {e}")
+            print(f"   Ошибка: {e}")
             return None
 
     def _parse_page_state(self, page_state_str: str) -> dict:
@@ -221,12 +222,12 @@ class AutonomousBrowserAgent:
             )
 
             response_text = response['message']['content']
-            print(f"   🤖 ИИ анализирует: {response_text[:150]}...")
+            print(f"   ИИ анализирует: {response_text[:150]}...")
 
             return self._parse_ai_response_simple(response_text)
 
         except Exception as e:
-            print(f"   ⚠️ Ошибка анализа: {e}")
+            print(f"   Ошибка анализа: {e}")
             # Простой fallback
             return {
                 "reasoning": "Ошибка анализа",
@@ -306,7 +307,7 @@ class AutonomousBrowserAgent:
         if len(self.context['history']) >= 5:
             recent_actions = [h['action'].get('action', '') for h in self.context['history'][-5:]]
             if len(set(recent_actions)) == 1:
-                print("   ⚠️ Возможное зацикливание")
+                print("   Возможное зацикливание")
                 return True
 
         return False
@@ -322,7 +323,7 @@ class AutonomousBrowserAgent:
             pass
 
         report = f"""
-📋 ОТЧЕТ
+ОТЧЕТ
 Цель: {self.context['goal']}
 Шагов: {total_steps}
 URL: {current_url}
