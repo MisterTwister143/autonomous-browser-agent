@@ -1,0 +1,4 @@
+undetected-chromedriver==3.5.4
+ollama==0.1.9
+selenium==4.15.0
+requests==2.31.0
